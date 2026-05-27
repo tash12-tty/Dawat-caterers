@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dawat Caterers – Premium Catering Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FAF6EF;--cream2:#F2EAD8;--cream3:#E3D5BE;
+  --brown:#1E1008;--brown2:#3A1F0A;--brown3:#5C3317;
+  --gold:#C8922A;--gold2:#E4B54A;--gold-lt:#F6E8C0;
+  --spice:#A83228;--spice2:#C94030;
+  --green:#264D10;--green-lt:#EDF4E4;
+  --text:#1E1008;--text2:#5C3317;--text3:#9A7B55;
+  --white:#FFFFFF;
+  --shadow:0 2px 16px rgba(30,16,8,.09);
+  --shadow-lg:0 8px 40px rgba(30,16,8,.16);
+  --r:12px;--r-lg:20px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--text);overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;font-weight:500}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--cream2)}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(250,246,239,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--cream3);height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;transition:box-shadow .3s}
+nav.scrolled{box-shadow:var(--shadow)}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--brown);letter-spacing:.8px;text-decoration:none;display:flex;align-items:center;gap:8px}
+.nav-brand .dot{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{font-size:13px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;color:var(--text2);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{background:var(--brown)!important;color:var(--cream)!important;padding:9px 20px;border-radius:6px}
+.nav-cta:hover{background:var(--gold)!important;color:var(--brown)!important}
+.nav-ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.nav-ham span{display:block;width:22px;height:2px;background:var(--brown);border-radius:2px}
+.mob-menu{display:none;position:fixed;top:68px;left:0;right:0;background:var(--cream);border-bottom:1px solid var(--cream3);padding:1.5rem;flex-direction:column;gap:.75rem;z-index:199;box-shadow:var(--shadow)}
+.mob-menu.open{display:flex}
+.mob-menu a{font-size:14px;font-weight:500;color:var(--text2);text-decoration:none;padding:.5rem 0;border-bottom:1px solid var(--cream2)}
+.hero{min-height:100vh;background:var(--brown);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:7rem 3rem 4rem;text-align:center}
+.hero-mesh{position:absolute;inset:0;background:radial-gradient(ellipse 70% 90% at 70% 40%,rgba(200,146,42,.14) 0%,transparent 55%),radial-gradient(ellipse 50% 60% at 20% 80%,rgba(168,50,40,.1) 0%,transparent 50%)}
+.hero-dots{position:absolute;inset:0;opacity:.035;background-image:radial-gradient(var(--gold) 1px,transparent 1px);background-size:28px 28px}
+.hero-content{position:relative;z-index:2;max-width:820px;margin:0 auto}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold2);border:1px solid rgba(200,146,42,.35);padding:6px 18px;border-radius:30px;margin-bottom:2.5rem;animation:fadeUp .8s ease both}
+.hero h1{font-size:clamp(58px,10vw,108px);color:var(--cream);line-height:1;letter-spacing:2px;animation:fadeUp .8s .1s ease both}
+.hero h1 em{font-style:italic;color:var(--gold2);display:block;font-size:.65em;letter-spacing:4px;margin-top:.1em}
+.hero-line{width:70px;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);margin:2rem auto;animation:fadeUp .8s .2s ease both}
+.hero-sub{font-size:16px;font-weight:300;color:rgba(250,246,239,.6);max-width:520px;margin:0 auto 3rem;line-height:1.8;animation:fadeUp .8s .25s ease both}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeUp .8s .3s ease both}
+.btn-gold{font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;background:var(--gold);color:var(--brown);padding:14px 36px;border-radius:7px;border:none;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 6px 22px rgba(200,146,42,.4)}
+.btn-outline-w{font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;background:transparent;color:var(--cream);padding:14px 36px;border-radius:7px;border:1px solid rgba(250,246,239,.25);cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-outline-w:hover{border-color:var(--gold);color:var(--gold)}
+.hero-stats{display:flex;gap:3rem;justify-content:center;margin-top:4.5rem;animation:fadeUp .8s .4s ease both;flex-wrap:wrap}
+.hstat-num{font-family:'Cormorant Garamond',serif;font-size:40px;color:var(--gold2);font-weight:600;line-height:1}
+.hstat-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(250,246,239,.4);margin-top:4px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.section{padding:6rem 3rem}
+.section-alt{background:var(--cream2)}
+.sec-tag{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:.75rem}
+.sec-title{font-size:clamp(34px,5vw,52px);color:var(--brown);line-height:1.1}
+.sec-title em{font-style:italic;color:var(--gold)}
+.sec-rule{width:52px;height:2px;background:linear-gradient(to right,var(--gold),var(--spice));border-radius:2px;margin:1.25rem 0}
+.sec-sub{font-size:15px;color:var(--text3);line-height:1.75;max-width:540px}
+.sec-center{text-align:center}
+.sec-center .sec-rule,.sec-center .sec-sub{margin-left:auto;margin-right:auto}
+.menu-wrap{max-width:1200px;margin:0 auto}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.75rem;margin-top:3.5rem}
+.mcard{background:var(--white);border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--cream3);box-shadow:var(--shadow);transition:transform .3s,box-shadow .3s;cursor:pointer}
+.mcard:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+.mcard-top{position:relative;height:210px;display:flex;align-items:flex-end;padding:1.5rem;overflow:hidden}
+.mcard-bg{position:absolute;inset:0;transition:transform .5s}
+.mcard:hover .mcard-bg{transform:scale(1.06)}
+.mcard-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,transparent 60%)}
+.bg-main{background:linear-gradient(135deg,#2C0F02 0%,#7A3510 55%,#C8922A 100%)}
+.bg-gravy{background:linear-gradient(135deg,#3D0A0A 0%,#7E1E1E 55%,#C94030 100%)}
+.bg-starter{background:linear-gradient(135deg,#0A2206 0%,#1E5418 55%,#4CAF50 100%)}
+.bg-dessert{background:linear-gradient(135deg,#1A0630 0%,#5A1E8A 55%,#A855F7 100%)}
+.mcard-emoji{position:absolute;top:1.25rem;right:1.25rem;font-size:42px;z-index:2;transition:transform .3s;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+.mcard:hover .mcard-emoji{transform:scale(1.15) rotate(-6deg)}
+.mcard-htxt{position:relative;z-index:2}
+.mcard-badge{display:inline-block;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;background:rgba(255,255,255,.18);color:white;padding:3px 10px;border-radius:20px;margin-bottom:5px;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.12)}
+.mcard-title{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:white;line-height:1.05}
+.mcard-sub{font-size:12px;color:rgba(255,255,255,.7);margin-top:2px}
+.mcard-body{padding:1.5rem}
+.mcard-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem}
+.chip{font-size:11px;padding:4px 10px;border-radius:20px;background:var(--cream2);color:var(--text2);border:1px solid var(--cream3)}
+.mcard-foot{display:flex;align-items:center;justify-content:space-between;padding-top:.875rem;border-top:1px solid var(--cream2);font-size:12px;color:var(--text3)}
+.expand-btn{width:30px;height:30px;border-radius:50%;background:var(--cream2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .3s}
+.mcard.open .expand-btn{background:var(--gold);color:var(--brown);transform:rotate(180deg)}
+.mcard-expand{max-height:0;overflow:hidden;transition:max-height .5s ease}
+.mcard.open .mcard-expand{max-height:900px}
+.mcard-expand-inner{padding:1.5rem;background:var(--cream);border-top:1px solid var(--cream2)}
+.mitem{display:flex;gap:12px;padding:.75rem 0;border-bottom:1px dashed var(--cream3)}
+.mitem:last-of-type{border-bottom:none}
+.mitem-icon{font-size:24px;flex-shrink:0;margin-top:1px}
+.mitem-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--brown)}
+.mitem-desc{font-size:12px;color:var(--text3);margin-top:2px;line-height:1.5}
+.mitem-qty{font-size:11px;font-weight:600;color:var(--gold);margin-top:3px}
+.free-tag{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:var(--green-lt);color:var(--green);padding:2px 8px;border-radius:10px;border:1px solid rgba(38,77,16,.2)}
+.mcard-obtn{width:100%;margin-top:1.25rem;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:13px;border-radius:8px;border:none;cursor:pointer;transition:all .2s}
+.obtn-main{background:var(--brown);color:var(--cream)}.obtn-main:hover{background:var(--gold);color:var(--brown)}
+.obtn-gravy{background:var(--spice);color:white}.obtn-gravy:hover{background:var(--spice2)}
+.obtn-starter{background:var(--green);color:white}.obtn-starter:hover{background:#2e5e14}
+.obtn-dessert{background:#6B2FA0;color:white}.obtn-dessert:hover{background:#7D3FBB}
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;max-width:1100px;margin:3rem auto 0}
+.why-item{text-align:center;padding:2rem 1.25rem}
+.why-icon{font-size:38px;display:block;margin-bottom:1rem}
+.why-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--brown);margin-bottom:.5rem}
+.why-desc{font-size:13px;color:var(--text3);line-height:1.75}
+#order-section{background:var(--brown);padding:6rem 3rem;position:relative;overflow:hidden}
+#order-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 25% 50%,rgba(200,146,42,.1) 0%,transparent 60%)}
+.order-wrap{max-width:780px;margin:0 auto;position:relative;z-index:2}
+.order-hdr{text-align:center;margin-bottom:3rem}
+.order-hdr .sec-tag{color:var(--gold2)}
+.order-hdr .sec-title{color:var(--cream)}
+.order-hdr .sec-rule,.order-hdr .sec-sub{margin-left:auto;margin-right:auto}
+.order-hdr .sec-sub{color:rgba(250,246,239,.55)}
+.order-box{background:var(--cream);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow-lg)}
+.order-banner{background:var(--gold);padding:1rem 1.75rem;display:flex;align-items:center;gap:12px}
+.ob-icon{font-size:24px}
+.ob-lbl{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(30,16,8,.65)}
+.ob-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--brown)}
+.oform{padding:2rem 2rem 0}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+.frow.full{grid-template-columns:1fr}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:11px;font-weight:600;letter-spacing:.9px;text-transform:uppercase;color:var(--text3)}
+.fg label .req{color:var(--spice);margin-left:2px}
+.fg input,.fg select,.fg textarea{font-family:'Outfit',sans-serif;font-size:14px;padding:11px 13px;background:var(--cream);border:1.5px solid var(--cream3);border-radius:8px;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,146,42,.12)}
+.fg input[readonly]{background:var(--cream2);cursor:not-allowed;opacity:.65}
+.fg select option{background:var(--cream)}
+.fg textarea{resize:vertical;min-height:75px;line-height:1.6}
+.fg .hint{font-size:11px;color:var(--text3)}
+.ferr{font-size:11px;color:var(--spice);display:none}
+.ferr.show{display:block}
+.fg.err input,.fg.err select{border-color:var(--spice)}
+.extras-box{margin:0 2rem 1.5rem;background:var(--cream2);border-radius:var(--r);padding:1.5rem;border:1px dashed var(--cream3)}
+.extras-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--brown);margin-bottom:.25rem}
+.extras-sub{font-size:12px;color:var(--text3);margin-bottom:1.25rem}
+.xitem{display:flex;align-items:center;gap:12px;background:var(--white);border-radius:8px;padding:10px 14px;border:1px solid var(--cream3);margin-bottom:.6rem}
+.xitem:last-child{margin-bottom:0}
+.xitem input[type="checkbox"]{width:17px;height:17px;accent-color:var(--gold);flex-shrink:0;cursor:pointer}
+.xlbl{flex:1;font-size:13px;font-weight:500;color:var(--text);cursor:pointer}
+.xqty{display:flex;align-items:center;gap:6px;opacity:0;pointer-events:none;transition:opacity .2s}
+.xqty.show{opacity:1;pointer-events:auto}
+.xqty input{width:64px;text-align:center;padding:5px 6px;font-size:13px;border:1.5px solid var(--cream3);border-radius:6px;background:var(--cream)}
+.xqty span{font-size:11px;color:var(--text3);white-space:nowrap}
+.order-foot{padding:1.5rem 2rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.order-note{font-size:12px;color:var(--text3);line-height:1.65;max-width:260px}
+.submit-btn{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;background:var(--brown);color:var(--cream);padding:14px 42px;border-radius:8px;border:none;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.submit-btn:hover{background:var(--gold);color:var(--brown);transform:translateY(-2px)}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
+.btn-spinner{width:16px;height:16px;border:2px solid rgba(250,246,239,.3);border-top-color:var(--cream);border-radius:50%;animation:spin .7s linear infinite;display:none}
+.submit-btn.loading .btn-spinner{display:block}
+.submit-btn.loading .btn-txt{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.modal-bg{position:fixed;inset:0;background:rgba(30,16,8,.72);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px)}
+.modal-bg.show{display:flex}
+.modal{background:var(--white);border-radius:var(--r-lg);max-width:500px;width:100%;padding:3rem 2.5rem;text-align:center;box-shadow:var(--shadow-lg);animation:popIn .3s ease both}
+@keyframes popIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+.modal-icon{font-size:60px;margin-bottom:1rem}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:38px;color:var(--brown);margin-bottom:.5rem}
+.modal-sub{font-size:14px;color:var(--text3);line-height:1.7;margin-bottom:1rem}
+.modal-oid{display:inline-block;background:var(--gold-lt);color:var(--brown);font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;letter-spacing:2.5px;padding:10px 26px;border-radius:8px;border:1px solid var(--gold);margin-bottom:1.5rem}
+.modal-details{text-align:left;background:var(--cream2);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem}
+.mrow{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid var(--cream3)}
+.mrow:last-child{border-bottom:none}
+.mrow span:first-child{color:var(--text3)}
+.mrow span:last-child{color:var(--brown);font-weight:500;text-align:right;max-width:58%}
+.modal-close{font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;background:var(--brown);color:var(--cream);padding:12px 34px;border-radius:8px;border:none;cursor:pointer;transition:all .2s}
+.modal-close:hover{background:var(--gold);color:var(--brown)}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--spice);color:white;padding:12px 24px;border-radius:8px;font-size:13px;z-index:600;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;box-shadow:var(--shadow-lg)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+footer{background:var(--brown2);padding:3rem;text-align:center}
+.foot-brand{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--cream);letter-spacing:1px;margin-bottom:.4rem}
+.foot-tag{font-size:11px;color:rgba(250,246,239,.4);letter-spacing:1.2px;margin-bottom:1.5rem}
+.foot-links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.25rem}
+.foot-links a{font-size:12px;color:rgba(250,246,239,.45);text-decoration:none;transition:color .2s}
+.foot-links a:hover{color:var(--gold)}
+.foot-copy{font-size:11px;color:rgba(250,246,239,.25)}
+@media(max-width:768px){
+  nav{padding:0 1.25rem}
+  .nav-links{display:none}
+  .nav-ham{display:flex}
+  .section{padding:4rem 1.25rem}
+  .hero{padding:6rem 1.25rem 3rem}
+  .hero-stats{gap:2rem}
+  .frow{grid-template-columns:1fr}
+  .why-grid{grid-template-columns:repeat(2,1fr)}
+  #order-section{padding:4rem 1.25rem}
+  .oform{padding:1.5rem 1.5rem 0}
+  .extras-box{margin:0 1.5rem 1.5rem}
+  .order-foot{padding:1.5rem}
+  .submit-btn{width:100%;justify-content:center}
+}
+@media(max-width:480px){.hero h1{font-size:46px}.menu-grid{grid-template-columns:1fr}.why-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="nav-brand" href="#home"><span class="dot">✦</span> Dawat Caterers</a>
+  <div class="nav-links">
+    <a href="#home">Home</a>
+    <a href="#menu">Menu</a>
+    <a href="#why-us">About</a>
+    <a href="#order-section" class="nav-cta">Place Order</a>
+  </div>
+  <button class="nav-ham" id="nav-ham" onclick="toggleMob()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mob-menu" id="mob-menu">
+  <a href="#home" onclick="closeMob()">Home</a>
+  <a href="#menu" onclick="closeMob()">Menu</a>
+  <a href="#why-us" onclick="closeMob()">About</a>
+  <a href="#order-section" onclick="closeMob()">Place Order</a>
+</div>
+
+<section class="hero" id="home">
+  <div class="hero-mesh"></div><div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="hero-pill">✦ Premium Catering Since 2005 ✦</div>
+    <h1>Dawat<em>Caterers</em></h1>
+    <div class="hero-line"></div>
+    <p class="hero-sub">Where every meal becomes a cherished memory. Authentic flavours, impeccable service — crafted for your most special occasions.</p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn-gold">Explore Our Menu</a>
+      <a href="#order-section" class="btn-outline-w">Book Your Event</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hstat-num">500+</div><div class="hstat-lbl">Events Catered</div></div>
+      <div><div class="hstat-num">20+</div><div class="hstat-lbl">Years of Excellence</div></div>
+      <div><div class="hstat-num">10K+</div><div class="hstat-lbl">Happy Guests</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="menu">
+  <div class="menu-wrap">
+    <div class="sec-center">
+      <span class="sec-tag">Our Menu</span>
+      <h2 class="sec-title">Crafted with <em>Love & Tradition</em></h2>
+      <div class="sec-rule"></div>
+      <p class="sec-sub">Click any card to explore what's included. Every package is curated for a complete, unforgettable experience.</p>
+    </div>
+    <div class="menu-grid">
+
+      <div class="mcard" id="mc-main" onclick="toggleCard('main')">
+        <div class="mcard-top"><div class="mcard-bg bg-main"></div><div class="mcard-emoji">🍛</div>
+          <div class="mcard-htxt"><div class="mcard-badge">Included in All Packages</div><div class="mcard-title">Main Course</div><div class="mcard-sub">The heart of every Dawat spread</div></div>
+        </div>
+        <div class="mcard-body">
+          <div class="mcard-chips"><span class="chip">Biryani</span><span class="chip">Chutney</span><span class="chip">Kheer</span><span class="chip">Water ✦ Free</span></div>
+          <div class="mcard-foot"><span>Click to see full details</span><button class="expand-btn" onclick="event.stopPropagation()">↓</button></div>
+        </div>
+        <div class="mcard-expand"><div class="mcard-expand-inner">
+          <div class="mitem"><span class="mitem-icon">🍚</span><div><div class="mitem-name">Signature Dum Biryani</div><div class="mitem-desc">Slow-cooked basmati layered with aromatic spices. Chicken, Mutton or Veg.</div><div class="mitem-qty">5 kg per 50 guests (scalable)</div></div></div>
+          <div class="mitem"><span class="mitem-icon">🥣</span><div><div class="mitem-name">Assorted Chutneys</div><div class="mitem-desc">Mint chutney, tamarind chutney, and onion raita — served fresh.</div><div class="mitem-qty">Full portions for all guests</div></div></div>
+          <div class="mitem"><span class="mitem-icon">🍮</span><div><div class="mitem-name">Shahi Kheer</div><div class="mitem-desc">Creamy rice pudding with pistachios, saffron and rose water.</div><div class="mitem-qty">Served per guest</div></div></div>
+          <div class="mitem"><span class="mitem-icon">💧</span><div><div class="mitem-name">Mineral Water Bottles</div><div class="mitem-desc">1L sealed mineral water per guest, chilled and served at table.</div><div class="mitem-qty"><span class="free-tag">COMPLIMENTARY</span></div></div></div>
+          <button class="mcard-obtn obtn-main" onclick="event.stopPropagation();selectMenu('Main Course','🍛')">✦ Place Order — Main Course</button>
+        </div></div>
+      </div>
+
+      <div class="mcard" id="mc-gravy" onclick="toggleCard('gravy')">
+        <div class="mcard-top"><div class="mcard-bg bg-gravy"></div><div class="mcard-emoji">🍲</div>
+          <div class="mcard-htxt"><div class="mcard-badge">Rich & Flavourful</div><div class="mcard-title">Gravies</div><div class="mcard-sub">Bold curries for every palate</div></div>
+        </div>
+        <div class="mcard-body">
+          <div class="mcard-chips"><span class="chip">Butter Chicken</span><span class="chip">Chilli Chicken</span><span class="chip">Dal Makhani</span><span class="chip">+more</span></div>
+          <div class="mcard-foot"><span>Click to see full details</span><button class="expand-btn" onclick="event.stopPropagation()">↓</button></div>
+        </div>
+        <div class="mcard-expand"><div class="mcard-expand-inner">
+          <div class="mitem"><span class="mitem-icon">🧈</span><div><div class="mitem-name">Murgh Makhani</div><div class="mitem-desc">Velvety tomato-cream sauce with tender chicken and fenugreek.</div><div class="mitem-qty">3 kg per 50 guests</div></div></div>
+          <div class="mitem"><span class="mitem-icon">🌶</span><div><div class="mitem-name">Chilli Chicken</div><div class="mitem-desc">Crispy chicken in tangy, spicy chilli-garlic sauce.</div><div class="mitem-qty">3 kg per 50 guests</div></div></div>
+          <div class="mitem"><span class="mitem-icon">🫘</span><div><div class="mitem-name">Dal Makhani</div><div class="mitem-desc">Slow-cooked black lentils in rich butter and cream.</div><div class="mitem-qty">4 kg per 50 guests</div></div></div>
+          <div class="mitem"><span class="mitem-icon">🍅</span><div><div class="mitem-name">Paneer Tikka Masala</div><div class="mitem-desc">Grilled cottage cheese in smoky, spiced tomato gravy.</div><div class="mitem-qty">3 kg per 50 guests</div></div></div>
+          <div class="mitem"><span class="mitem-icon">🥩</span><div><div class="mitem-name">Mutton Rogan Josh</div><div class="mitem-desc">Kashmiri slow-braised mutton with whole spices.</div><div class="mitem-qty">3 kg per 50 guests</div></div></div>
+          <button class="mcard-obtn obtn-gravy" onclick="event.stopPropagation();selectMenu('Gravies Package','🍲')">✦ Place Order — Gravies</button>
+        </div></div>
+      </div>
+
+      <div class="mcard" id="mc-starter" onclick="toggleCard('starter')">
+        <div class="mcard-top"><div class="mcard-bg bg-starter"></div><div class="mcard-emoji">🍢</div>
+          <div class="mcard-htxt"><div class="mcard-badge">Optional Add-on</div><div class="mcard-title">Starters</div><div class="mcard-sub">Set the mood before the feast</div></div>
+        </div>
+        <div class="mcard-body">
+          <div class="mcard-chips"><span class="chip">Seekh Kebab</span><span class="chip">Malai Tikka</span><span class="chip">Fish Fry</span><span class="chip">+more</span></div>
+          <div class="mcard-foot"><span>Click to see full details</span><button class="expand-btn" onclick="event.stopPropagation()">↓</button></div>
+        </div>
+        <div class="mcard-expand"><div class="mcard-expand-inner">
+          <div class="mitem"><span class="mitem-icon">🥩</span><div><div class="mitem-name">Seekh Kebab</div><div class="mitem-desc">Minced lamb on skewers, grilled in tandoor with fresh herbs.</div><div class="mitem-qty">4 pieces per guest</div></div></div>
+          <div class="mitem"><span class="mitem-icon">🐔</span><div><div class="mitem-name">Chicken Malai Tikka</div><div class="mitem-desc">Creamy melt-in-mouth chicken with cheese, cream and mild spices.</div><div class="mitem-qty">4 pieces per guest</div></div></div>
+          <div class="mitem"><span class="mitem-icon">🥦</span><div><div class="mitem-name">Crispy Veg Cutlets</div><div class="mitem-desc">Golden potato and vegetable patties — perfect for all ages.</div><div class="mitem-qty">3 pieces per guest</div></div></div>
+          <div class="mitem"><span class="mitem-icon">🐟</span><div><div class="mitem-name">Coastal Fish Fry</div><div class="mitem-desc">Fresh fish in turmeric and curry leaves, fried to crispy perfection.</div><div class="mitem-qty">2 pieces per guest</div></div></div>
+          <button class="mcard-obtn obtn-starter" onclick="event.stopPropagation();selectMenu('Starters Package','🍢')">✦ Place Order — Starters</button>
+        </div></div>
+      </div>
+
+      <div class="mcard" id="mc-dessert" onclick="toggleCard('dessert')">
+        <div class="mcard-top"><div class="mcard-bg bg-dessert"></div><div class="mcard-emoji">🍬</div>
+          <div class="mcard-htxt"><div class="mcard-badge">✦ Must Try — Extra Desserts</div><div class="mcard-title">Desserts</div><div class="mcard-sub">End every celebration sweetly</div></div>
+        </div>
+        <div class="mcard-body">
+          <div class="mcard-chips"><span class="chip">Gulab Jamun</span><span class="chip">Rasmalai</span><span class="chip">Halwa</span><span class="chip">+more</span></div>
+          <div class="mcard-foot"><span>Click to see full details</span><button class="expand-btn" onclick="event.stopPropagation()">↓</button></div>
+        </div>
+        <div class="mcard-expand"><div class="mcard-expand-inner">
+          <div class="mitem"><span class="mitem-icon">🍯</span><div><div class="mitem-name">Gulab Jamun</div><div class="mitem-desc">Spongy milk dumplings soaked in rose and cardamom syrup.</div><div class="mitem-qty">3 pieces per guest</div></div></div>
+          <div class="mitem"><span class="mitem-icon">🥛</span><div><div class="mitem-name">Rasmalai</div><div class="mitem-desc">Cottage cheese discs in saffron-infused sweetened milk.</div><div class="mitem-qty">2 pieces per guest</div></div></div>
+          <div class="mitem"><span class="mitem-icon">🫓</span><div><div class="mitem-name">Sooji Halwa</div><div class="mitem-desc">Warm semolina pudding in ghee with cashews and cardamom.</div><div class="mitem-qty">Per guest serving</div></div></div>
+          <div class="mitem"><span class="mitem-icon">🍨</span><div><div class="mitem-name">Ice Cream Station</div><div class="mitem-desc">Mango, Pista & Strawberry — 2 scoops per guest with toppings.</div><div class="mitem-qty">2 scoops per guest</div></div></div>
+          <button class="mcard-obtn obtn-dessert" onclick="event.stopPropagation();selectMenu('Desserts Package','🍬')">✦ Place Order — Desserts</button>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" id="why-us">
+  <div class="sec-center">
+    <span class="sec-tag">Why Dawat</span>
+    <h2 class="sec-title">The <em>Dawat</em> Promise</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="why-grid">
+    <div class="why-item"><span class="why-icon">👨‍🍳</span><div class="why-title">Master Chefs</div><p class="why-desc">Decades of culinary tradition brought to every event with care and passion.</p></div>
+    <div class="why-item"><span class="why-icon">🌿</span><div class="why-title">Fresh Ingredients</div><p class="why-desc">Sourced fresh daily — no shortcuts, no compromises, ever.</p></div>
+    <div class="why-item"><span class="why-icon">🚚</span><div class="why-title">On-Time Delivery</div><p class="why-desc">Precision timing guaranteed. Your guests will never wait.</p></div>
+    <div class="why-item"><span class="why-icon">🤝</span><div class="why-title">End-to-End Service</div><p class="why-desc">Setup to cleanup — we handle everything so you enjoy the day.</p></div>
+  </div>
+</section>
+
+<section id="order-section">
+  <div class="order-wrap">
+    <div class="order-hdr">
+      <span class="sec-tag">Book Your Event</span>
+      <h2 class="sec-title">Place Your <em>Order</em></h2>
+      <div class="sec-rule"></div>
+      <p class="sec-sub">Fill in your details below. We'll confirm within 24 hours.</p>
+    </div>
+    <div class="order-box">
+      <div class="order-banner">
+        <span class="ob-icon" id="ob-icon">🍽</span>
+        <div><div class="ob-lbl">Selected Package</div><div class="ob-name" id="ob-name">Choose a package from the menu above</div></div>
+      </div>
+      <div class="oform">
+        <div class="frow">
+          <div class="fg" id="fg-name"><label>Customer Name <span class="req">*</span></label><input type="text" id="f-name" placeholder="Your full name"><span class="ferr" id="err-name">Please enter your name</span></div>
+          <div class="fg"><label>Order ID</label><input type="text" id="f-oid" readonly><span class="hint">Auto-generated for your reference</span></div>
+        </div>
+        <div class="frow">
+          <div class="fg" id="fg-phone"><label>Phone Number <span class="req">*</span></label><input type="tel" id="f-phone" placeholder="+91 98765 43210"><span class="ferr" id="err-phone">Enter a valid phone number</span></div>
+          <div class="fg" id="fg-email"><label>Email Address <span class="req">*</span></label><input type="email" id="f-email" placeholder="you@example.com"><span class="ferr" id="err-email">Enter a valid email</span></div>
+        </div>
+        <div class="frow">
+          <div class="fg" id="fg-event"><label>Event Type <span class="req">*</span></label>
+            <select id="f-event"><option value="">— Select Event Type —</option><option>Wedding</option><option>Birthday Party</option><option>Corporate Event</option><option>Anniversary</option><option>Religious Ceremony</option><option>Engagement</option><option>Baby Shower</option><option>Other</option></select>
+            <span class="ferr" id="err-event">Please select event type</span></div>
+          <div class="fg" id="fg-guests"><label>Number of Guests <span class="req">*</span></label><input type="number" id="f-guests" placeholder="e.g. 150" min="10"><span class="ferr" id="err-guests">Minimum 10 guests required</span></div>
+        </div>
+        <div class="frow">
+          <div class="fg" id="fg-date"><label>Event Date <span class="req">*</span></label><input type="date" id="f-date"><span class="ferr" id="err-date">Select a valid future date</span></div>
+          <div class="fg" id="fg-time"><label>Delivery Time <span class="req">*</span></label><input type="time" id="f-time"><span class="ferr" id="err-time">Please select delivery time</span></div>
+        </div>
+        <div class="frow full">
+          <div class="fg" id="fg-venue"><label>Venue / Delivery Address <span class="req">*</span></label><input type="text" id="f-venue" placeholder="Full address of the event venue"><span class="ferr" id="err-venue">Please enter venue address</span></div>
+        </div>
+        <div class="frow full">
+          <div class="fg" id="fg-menu"><label>Menu Package <span class="req">*</span></label>
+            <select id="f-menu"><option value="">— Select a Package —</option><option value="Main Course">Main Course (Biryani, Chutney, Kheer + Water)</option><option value="Gravies Package">Gravies Package (Butter Chicken, Chilli Chicken + more)</option><option value="Starters Package">Starters Package (Kebabs, Tikka, Cutlets + more)</option><option value="Desserts Package">Desserts Package (Gulab Jamun, Rasmalai + more)</option><option value="Full Dawat Package">Full Dawat Package (All of the above)</option></select>
+            <span class="ferr" id="err-menu">Please select a menu package</span></div>
+        </div>
+      </div>
+
+      <div class="extras-box">
+        <div class="extras-title">✦ Extras & Add-ons</div>
+        <div class="extras-sub">Anything beyond the standard package? Customise below.</div>
+        <div class="xitem"><input type="checkbox" id="ex-rice" onchange="toggleX(this,'xrq')"><label class="xlbl" for="ex-rice">Extra Biryani / Rice</label><div class="xqty" id="xrq"><input type="number" value="1" min="1" max="50" id="xrq-v"><span>kg</span></div></div>
+        <div class="xitem"><input type="checkbox" id="ex-gravy" onchange="toggleX(this,'xgq')"><label class="xlbl" for="ex-gravy">Extra Gravy (specify in notes)</label><div class="xqty" id="xgq"><input type="number" value="1" min="1" max="30" id="xgq-v"><span>kg</span></div></div>
+        <div class="xitem"><input type="checkbox" id="ex-starter" onchange="toggleX(this,'xsq')"><label class="xlbl" for="ex-starter">Extra Starters</label><div class="xqty" id="xsq"><input type="number" value="50" min="10" step="10" id="xsq-v"><span>pieces</span></div></div>
+        <div class="xitem"><input type="checkbox" id="ex-dessert" onchange="toggleX(this,'xdq')"><label class="xlbl" for="ex-dessert">Extra Desserts</label><div class="xqty" id="xdq"><input type="number" value="50" min="10" step="10" id="xdq-v"><span>portions</span></div></div>
+        <div class="xitem"><input type="checkbox" id="ex-water" onchange="toggleX(this,'xwq')"><label class="xlbl" for="ex-water">Extra Water Bottles (1L)</label><div class="xqty" id="xwq"><input type="number" value="24" min="12" step="12" id="xwq-v"><span>bottles</span></div></div>
+        <div class="xitem"><input type="checkbox" id="ex-bread" onchange="toggleX(this,'xbq')"><label class="xlbl" for="ex-bread">Breads (Naan / Roti / Paratha)</label><div class="xqty" id="xbq"><input type="number" value="100" min="50" step="50" id="xbq-v"><span>pieces</span></div></div>
+        <div style="margin-top:1rem"><div class="fg"><label>Special Requests</label><textarea id="f-special" placeholder="e.g. Extra Butter Chicken for 50 people, Jain food separately for 10 guests, extra 2kg halwa…"></textarea></div></div>
+      </div>
+
+      <div class="order-foot">
+        <div class="order-note">✦ We'll call to confirm within 24 hours.<br>Minimum order: 50 guests. T&C apply.</div>
+        <button class="submit-btn" id="submit-btn" onclick="submitOrder()">
+          <div class="btn-spinner"></div><span class="btn-txt">✦ Confirm My Order</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-brand">✦ Dawat Caterers</div>
+  <div class="foot-tag">Every Meal, A Celebration</div>
+  <div class="foot-links">
+    <a href="#home">Home</a><a href="#menu">Menu</a><a href="#order-section">Order</a>
+    <a href="tel:+919876543210">📞 +91 98765 43210</a>
+    <a href="mailto:orders@dawatcaterers.com">✉ orders@dawatcaterers.com</a>
+  </div>
+  <div class="foot-copy">© 2025 Dawat Caterers. All rights reserved.</div>
+</footer>
+
+<div class="modal-bg" id="success-modal">
+  <div class="modal">
+    <div class="modal-icon">🎉</div>
+    <div class="modal-title">Order Received!</div>
+    <p class="modal-sub">Thank you for choosing Dawat Caterers. Your order is saved. We'll call you within 24 hours.</p>
+    <div class="modal-oid" id="m-oid"></div>
+    <div class="modal-details" id="m-details"></div>
+    <button class="modal-close" onclick="closeModal()">✦ Done</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const app = initializeApp({
+  apiKey:"AIzaSyDeLIJ-_VNF4oSHBVg8Y_vItc6VSbGSXQQ",
+  authDomain:"dawat-caterers.firebaseapp.com",
+  projectId:"dawat-caterers",
+  storageBucket:"dawat-caterers.firebasestorage.app",
+  messagingSenderId:"719274841723",
+  appId:"1:719274841723:web:265b217ab0274314c8f4de"
+});
+const db = getFirestore(app);
+window.__db = db;
+window.__col = collection;
+window.__add = addDoc;
+window.__ts  = serverTimestamp;
+window.__fbReady = true;
+</script>
+
+<script>
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>20));
+function toggleMob(){document.getElementById('mob-menu').classList.toggle('open')}
+function closeMob(){document.getElementById('mob-menu').classList.remove('open')}
+
+function genOid(){return'DWT-'+Date.now().toString(36).toUpperCase().slice(-4)+Math.floor(Math.random()*900+100)}
+let currentOid=genOid();
+document.getElementById('f-oid').value=currentOid;
+document.getElementById('f-date').min=new Date().toISOString().split('T')[0];
+
+function toggleCard(id){
+  const c=document.getElementById('mc-'+id);
+  const was=c.classList.contains('open');
+  document.querySelectorAll('.mcard').forEach(x=>x.classList.remove('open'));
+  if(!was)c.classList.add('open');
+}
+function selectMenu(name,icon){
+  document.getElementById('ob-icon').textContent=icon;
+  document.getElementById('ob-name').textContent=name;
+  const s=document.getElementById('f-menu');
+  for(let i=0;i<s.options.length;i++){if(s.options[i].value===name){s.selectedIndex=i;break}}
+  document.getElementById('order-section').scrollIntoView({behavior:'smooth',block:'start'});
+}
+document.getElementById('f-menu').addEventListener('change',function(){
+  const m={'Main Course':'🍛','Gravies Package':'🍲','Starters Package':'🍢','Desserts Package':'🍬','Full Dawat Package':'✦'};
+  document.getElementById('ob-icon').textContent=m[this.value]||'🍽';
+  document.getElementById('ob-name').textContent=this.value||'Choose a package from the menu above';
+});
+function toggleX(cb,id){document.getElementById(id).classList.toggle('show',cb.checked)}
+
+function showToast(msg,err=true){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.background=err?'var(--spice)':'#264D10';
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+function chk(id,errId,fn){
+  const el=document.getElementById(id);
+  const fg=el?.closest('.fg');
+  const er=document.getElementById(errId);
+  const ok=fn(el?.value||'');
+  fg?.classList.toggle('err',!ok);
+  er?.classList.toggle('show',!ok);
+  return ok;
+}
+function validateAll(){
+  const today=new Date();today.setHours(0,0,0,0);
+  let ok=true;
+  ok&=chk('f-name','err-name',v=>v.trim().length>=2);
+  ok&=chk('f-phone','err-phone',v=>/^[+\d\s\-]{7,15}$/.test(v.trim()));
+  ok&=chk('f-email','err-email',v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()));
+  ok&=chk('f-event','err-event',v=>v!=='');
+  ok&=chk('f-guests','err-guests',v=>parseInt(v)>=10);
+  ok&=chk('f-date','err-date',v=>v&&new Date(v+'T00:00:00')>=today);
+  ok&=chk('f-time','err-time',v=>v!=='');
+  ok&=chk('f-venue','err-venue',v=>v.trim().length>3);
+  ok&=chk('f-menu','err-menu',v=>v!=='');
+  return!!ok;
+}
+['f-name','f-phone','f-email','f-event','f-guests','f-date','f-time','f-venue','f-menu'].forEach(id=>{
+  document.getElementById(id)?.addEventListener('blur',()=>{
+    const today=new Date();today.setHours(0,0,0,0);
+    const map={'f-name':v=>v.trim().length>=2,'f-phone':v=>/^[+\d\s\-]{7,15}$/.test(v.trim()),'f-email':v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),'f-event':v=>v!=='','f-guests':v=>parseInt(v)>=10,'f-date':v=>v&&new Date(v+'T00:00:00')>=today,'f-time':v=>v!=='','f-venue':v=>v.trim().length>3,'f-menu':v=>v!==''};
+    chk(id,'err-'+id.replace('f-',''),map[id]);
+  });
+});
+
+function collectExtras(){
+  const x=[];
+  [['ex-rice','xrq-v','Extra Rice','kg'],['ex-gravy','xgq-v','Extra Gravy','kg'],['ex-starter','xsq-v','Extra Starters','pieces'],['ex-dessert','xdq-v','Extra Desserts','portions'],['ex-water','xwq-v','Extra Water','bottles'],['ex-bread','xbq-v','Breads','pieces']].forEach(([cb,qv,lbl,u])=>{
+    if(document.getElementById(cb).checked)x.push(lbl+': '+document.getElementById(qv).value+' '+u);
+  });
+  const sp=document.getElementById('f-special').value.trim();
+  if(sp)x.push('Special: '+sp);
+  return x;
+}
+
+async function submitOrder(){
+  if(!validateAll()){document.querySelector('.fg.err')?.scrollIntoView({behavior:'smooth',block:'center'});return}
+  if(!window.__fbReady){showToast('⚠ Connection not ready. Please wait a moment.');return}
+  const btn=document.getElementById('submit-btn');
+  btn.classList.add('loading');btn.disabled=true;
+  const name=document.getElementById('f-name').value.trim();
+  const phone=document.getElementById('f-phone').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  const event=document.getElementById('f-event').value;
+  const guests=parseInt(document.getElementById('f-guests').value);
+  const date=document.getElementById('f-date').value;
+  const time=document.getElementById('f-time').value;
+  const venue=document.getElementById('f-venue').value.trim();
+  const menu=document.getElementById('f-menu').value;
+  const extras=collectExtras();
+  try{
+    await window.__add(window.__col(window.__db,'orders'),{
+      orderId:currentOid,customerName:name,phone,email,
+      eventType:event,guests,date,time,venue,menuPackage:menu,
+      extras,status:'Pending',priority:null,
+      createdAt:window.__ts()
+    });
+    const fd=new Date(date+'T00:00:00').toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const[h,m]=time.split(':');const hr=parseInt(h);
+    const ft=`${hr>12?hr-12:hr||12}:${m} ${hr>=12?'PM':'AM'}`;
+    document.getElementById('m-oid').textContent=currentOid;
+    document.getElementById('m-details').innerHTML=`
+      <div class="mrow"><span>Customer</span><span>${name}</span></div>
+      <div class="mrow"><span>Phone</span><span>${phone}</span></div>
+      <div class="mrow"><span>Event</span><span>${event}</span></div>
+      <div class="mrow"><span>Guests</span><span>${guests}</span></div>
+      <div class="mrow"><span>Package</span><span>${menu}</span></div>
+      <div class="mrow"><span>Date</span><span>${fd}</span></div>
+      <div class="mrow"><span>Time</span><span>${ft}</span></div>
+      <div class="mrow"><span>Venue</span><span>${venue.slice(0,45)}${venue.length>45?'…':''}</span></div>
+      ${extras.length?`<div class="mrow"><span>Extras</span><span>${extras.length} add-on(s)</span></div>`:''}`;
+    document.getElementById('success-modal').classList.add('show');
+  }catch(e){console.error(e);showToast('⚠ Failed to submit. Please check your connection and try again.');}
+  finally{btn.classList.remove('loading');btn.disabled=false;}
+}
+
+function closeModal(){
+  document.getElementById('success-modal').classList.remove('show');
+  ['f-name','f-phone','f-email','f-guests','f-date','f-time','f-venue','f-special'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-event').selectedIndex=0;
+  document.getElementById('f-menu').selectedIndex=0;
+  document.getElementById('ob-icon').textContent='🍽';
+  document.getElementById('ob-name').textContent='Choose a package from the menu above';
+  ['ex-rice','ex-gravy','ex-starter','ex-dessert','ex-water','ex-bread'].forEach(id=>document.getElementById(id).checked=false);
+  ['xrq','xgq','xsq','xdq','xwq','xbq'].forEach(id=>document.getElementById(id).classList.remove('show'));
+  document.querySelectorAll('.fg').forEach(f=>f.classList.remove('err'));
+  document.querySelectorAll('.ferr').forEach(e=>e.classList.remove('show'));
+  currentOid=genOid();
+  document.getElementById('f-oid').value=currentOid;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

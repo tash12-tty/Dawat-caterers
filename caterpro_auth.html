@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CaterPro – Order Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D0B08;--bg2:#141210;--bg3:#1C1914;--card:#221F19;
+  --border:#2E2A22;--border2:#3A3528;
+  --gold:#D4A843;--gold2:#ECC96A;--gold-dim:#7A5E20;--gold-bg:#1E1A08;
+  --text:#F0EAD8;--text2:#A89060;--text3:#5C5040;
+  --red:#E05555;--red-bg:#2A1212;--red-border:#3D1818;
+  --orange:#D97C35;--orange-bg:#271508;
+  --green:#5AAD6E;--green-bg:#0E2114;--green-border:#1A4028;
+  --blue:#5B9BD5;--blue-bg:#0D1E30;
+  --r:10px;--r-lg:16px;
+  --shadow:0 4px 20px rgba(0,0,0,.4);
+  --shadow-lg:0 8px 40px rgba(0,0,0,.6);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+h1,h2,h3{font-family:'Playfair Display',serif;font-weight:600}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ── BUTTONS ── */
+.btn{font-family:'Jost',sans-serif;font-size:13px;font-weight:500;padding:8px 16px;border-radius:8px;cursor:pointer;border:none;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-gold{background:var(--gold);color:#0D0B08}.btn-gold:hover{background:var(--gold2)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}.btn-ghost:hover{background:var(--bg3);color:var(--text)}
+.btn-danger{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}.btn-danger:hover{background:#3a1616}
+.btn-sm{padding:5px 12px;font-size:12px;border-radius:6px}
+.btn-ai{background:linear-gradient(135deg,var(--gold-bg),#2a1f08);color:var(--gold);border:1px solid var(--gold-dim)}.btn-ai:hover{border-color:var(--gold)}
+
+/* ── APP ── */
+#app{display:grid;min-height:100vh;grid-template-rows:60px 1fr;grid-template-columns:1fr}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;position:sticky;top:0;z-index:100;height:60px}
+.topbar-logo{display:flex;align-items:center;gap:8px;font-family:'Playfair Display',serif;font-size:20px;color:var(--gold)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-date{font-size:12px;color:var(--text3)}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s ease infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── BODY LAYOUT ── */
+.body-layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 60px)}
+
+/* ── SIDEBAR ── */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:1.5rem 0;display:flex;flex-direction:column}
+.nav-sec{font-size:10px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--text3);padding:.75rem 1.25rem .4rem}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 1.25rem;cursor:pointer;font-size:13px;color:var(--text2);border-left:3px solid transparent;transition:all .15s}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{background:var(--gold-bg);color:var(--gold);border-left-color:var(--gold);font-weight:500}
+.nav-icon{width:18px;text-align:center;font-size:15px}
+.nav-badge{margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;min-width:20px;text-align:center}
+.sidebar-div{height:1px;background:var(--border);margin:.75rem 0}
+
+/* ── MAIN ── */
+.main{padding:2rem;overflow-y:auto;max-height:calc(100vh - 60px)}
+.page{display:none}.page.active{display:block}
+
+/* ── SECTION HEADER ── */
+.sec-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+.sec-title{font-size:26px;color:var(--text)}
+.sec-sub{font-size:13px;color:var(--text3);margin-top:3px}
+
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.75rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem 1.5rem;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.sc-gold::before{background:var(--gold)}.sc-orange::before{background:var(--orange)}.sc-red::before{background:var(--red)}.sc-green::before{background:var(--green)}
+.stat-lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:8px}
+.stat-val{font-family:'Playfair Display',serif;font-size:34px;color:var(--text);line-height:1}
+.stat-sub{font-size:11px;color:var(--text3);margin-top:5px}
+
+/* ── REMINDER BANNER ── */
+.reminder-bar{background:var(--red-bg);border:1px solid var(--red-border);border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:1.5rem;display:none}
+.reminder-bar.show{display:block}
+.rb-title{font-size:13px;font-weight:600;color:var(--red);display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.rb-item{font-size:12px;color:#e07070;padding:3px 0}
+
+/* ── SEARCH + FILTER ── */
+.search-box{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:9px 14px;margin-bottom:1rem}
+.search-box input{background:none;border:none;font-family:'Jost',sans-serif;font-size:13px;color:var(--text);outline:none;flex:1}
+.search-box input::placeholder{color:var(--text3)}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.25rem}
+.fchip{font-size:12px;font-weight:500;padding:5px 14px;border-radius:20px;cursor:pointer;background:var(--card);color:var(--text2);border:1px solid var(--border2);transition:all .15s}
+.fchip:hover{border-color:var(--gold-dim);color:var(--gold)}
+.fchip.active{background:var(--gold-bg);color:var(--gold);border-color:var(--gold-dim)}
+
+/* ── ORDER CARDS ── */
+.orders-list{display:flex;flex-direction:column;gap:10px}
+.ocard{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:box-shadow .15s,border-color .15s}
+.ocard:hover{border-color:var(--border2);box-shadow:var(--shadow)}
+.ocard.p-critical{border-left:4px solid var(--red)}
+.ocard.p-high{border-left:4px solid var(--orange)}
+.ocard.p-medium{border-left:4px solid var(--gold)}
+.ocard.p-low{border-left:4px solid var(--green)}
+.ocard-head{display:flex;align-items:center;gap:12px;padding:1rem 1.25rem;cursor:pointer;user-select:none;flex-wrap:wrap}
+.ocard-head:hover{background:rgba(255,255,255,.015)}
+.oid{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.5px;min-width:90px}
+.oname{font-size:15px;font-weight:500;color:var(--text);flex:1;min-width:120px}
+.oev-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;white-space:nowrap}
+.ev-wedding{background:#21103a;color:#c084fc;border:1px solid #4a1d8a}
+.ev-corporate{background:var(--blue-bg);color:var(--blue);border:1px solid #1e3d60}
+.ev-birthday{background:var(--orange-bg);color:var(--orange);border:1px solid #4a2a0e}
+.ev-conference{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.ev-other{background:var(--bg3);color:var(--text2);border:1px solid var(--border)}
+.odate{font-size:12px;color:var(--text2);white-space:nowrap}
+.ppill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.pp-critical{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
+.pp-high{background:var(--orange-bg);color:var(--orange);border:1px solid #4a2a0e}
+.pp-medium{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-dim)}
+.pp-low{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.pp-none{background:var(--bg3);color:var(--text3);border:1px solid var(--border)}
+.cd-urgent{color:var(--red);font-size:11px;font-weight:700}
+.cd-soon{color:var(--orange);font-size:11px;font-weight:700}
+.cd-ok{color:var(--green);font-size:11px;font-weight:700}
+.cd-past{color:var(--text3);font-size:11px}
+.ocard-body{display:none;padding:0 1.25rem 1.25rem;border-top:1px solid var(--border)}
+.ocard-body.open{display:block}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1rem}
+.dg-full{grid-column:1/-1}
+.dg label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);display:block;margin-bottom:3px}
+.dg span{font-size:13px;color:var(--text)}
+.ai-box{margin-top:1rem;background:var(--gold-bg);border:1px solid var(--gold-dim);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold2);display:flex;gap:8px;align-items:flex-start}
+.ai-box strong{display:block;font-size:10px;letter-spacing:.5px;margin-bottom:3px;color:var(--gold);text-transform:uppercase}
+.ai-loading{margin-top:1rem;background:var(--gold-bg);border:1px solid var(--gold-dim);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--gold);display:flex;align-items:center;gap:8px}
+.spinner{width:14px;height:14px;border:2px solid var(--gold-dim);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.card-actions{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap}
+.new-badge{background:var(--green);color:white;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;animation:pulse 2s infinite}
+.sdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+.sd-pending{background:#f59e0b}.sd-confirmed{background:var(--green)}.sd-delivered{background:var(--blue)}.sd-cancelled{background:var(--red)}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px)}
+.modal-bg.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--border2);border-radius:var(--r-lg);width:100%;max-width:600px;box-shadow:var(--shadow-lg);max-height:90vh;overflow-y:auto}
+.modal-head{padding:1.5rem 1.5rem 0;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:22px;color:var(--text)}
+.modal-x{background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;line-height:1;padding:4px}.modal-x:hover{color:var(--text)}
+.modal-body{padding:1.5rem}
+.mfgrid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.mfg{display:flex;flex-direction:column;gap:6px}
+.mfg.full{grid-column:1/-1}
+.mfg label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text3)}
+.mfg input,.mfg select,.mfg textarea{font-family:'Jost',sans-serif;font-size:13px;padding:9px 12px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);outline:none;transition:border-color .15s;width:100%}
+.mfg input:focus,.mfg select:focus,.mfg textarea:focus{border-color:var(--gold)}
+.mfg select option{background:var(--bg3)}
+.mfg textarea{resize:vertical;min-height:70px}
+.mfg input[readonly]{opacity:.5;cursor:not-allowed}
+.modal-foot{padding:1rem 1.5rem 1.5rem;display:flex;gap:10px;justify-content:flex-end;border-top:1px solid var(--border)}
+
+/* ── CALENDAR ── */
+.cal-nav{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem}
+.cal-month-title{font-family:'Playfair Display',serif;font-size:22px}
+.cal-grid7{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day-lbl{font-size:11px;font-weight:600;text-align:center;color:var(--text3);padding:6px 0;text-transform:uppercase;letter-spacing:.5px}
+.cal-cell{background:var(--card);border:1px solid var(--border);border-radius:8px;min-height:80px;padding:6px}
+.cal-cell.today{border-color:var(--gold-dim)}
+.cal-num{font-size:12px;font-weight:600;color:var(--text3);margin-bottom:4px}
+.cal-cell.today .cal-num{background:var(--gold);color:#0D0B08;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px}
+.cal-ev{font-size:10px;padding:2px 5px;border-radius:4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.cal-empty{background:transparent;border-color:transparent}
+
+/* ── SETTINGS ── */
+.settings-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;max-width:480px;margin-bottom:1.5rem}
+.settings-card h3{font-size:18px;margin-bottom:1rem;color:var(--text)}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--text3)}
+.empty-icon{font-size:48px;margin-bottom:1rem;opacity:.35}
+.empty-state p{font-size:15px;margin-bottom:1.25rem}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--bg2);border:1px solid var(--border2);color:var(--text);padding:12px 20px;border-radius:var(--r);font-size:13px;z-index:999;opacity:0;transform:translateY(20px);transition:all .2s;pointer-events:none;max-width:320px;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ── LOADING OVERLAY ── */
+.loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;transition:opacity .4s}
+.loading-overlay.hide{opacity:0;pointer-events:none}
+.lo-spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+.lo-text{font-size:13px;color:var(--text3);letter-spacing:.5px}
+
+@media(max-width:900px){.body-layout{grid-template-columns:1fr}.sidebar{display:none}.stats-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.stats-grid{grid-template-columns:1fr}.mfgrid{grid-template-columns:1fr}.ocard-head{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="lo-spinner"></div>
+  <div class="lo-text">Loading CaterPro…</div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">🍽 CaterPro &nbsp;<span style="font-size:13px;font-family:'Jost',sans-serif;color:var(--text3);font-weight:400">Dawat Caterers Dashboard</span></div>
+    <div class="topbar-right">
+      <div class="topbar-date" id="topbar-date"></div>
+      <span class="live-dot" title="Live Firebase connection active"></span>
+      <span style="font-size:11px;color:var(--green)">Live</span>
+      <button class="btn btn-ghost btn-sm" onclick="openModal()">+ New Order</button>
+      <button class="btn btn-ai btn-sm" onclick="aiPrioritizeAll()">✦ AI Prioritize All</button>
+    </div>
+  </div>
+
+  <div class="body-layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="nav-sec">Menu</div>
+      <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span> Dashboard</div>
+      <div class="nav-item" onclick="showPage('orders',this)"><span class="nav-icon">📋</span> All Orders <span class="nav-badge" id="nav-badge">0</span></div>
+      <div class="nav-item" onclick="showPage('calendar',this)"><span class="nav-icon">📅</span> Calendar</div>
+      <div class="nav-item" onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span> Settings</div>
+      <div class="sidebar-div"></div>
+      <div class="nav-sec">Quick Filter</div>
+      <div class="nav-item" onclick="qFilter('critical')"><span class="nav-icon">🔴</span> Critical</div>
+      <div class="nav-item" onclick="qFilter('today')"><span class="nav-icon">⚡</span> Due Today</div>
+      <div class="nav-item" onclick="qFilter('wedding')"><span class="nav-icon">💍</span> Weddings</div>
+      <div class="nav-item" onclick="qFilter('new')"><span class="nav-icon">🆕</span> New Orders</div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="sec-hdr">
+          <div><div class="sec-title">Good day 👋 Your overview</div><div class="sec-sub" id="dash-date"></div></div>
+          <button class="btn btn-gold" onclick="openModal()">+ Add Order</button>
+        </div>
+        <div class="reminder-bar" id="reminder-bar">
+          <div class="rb-title">⚠️ Upcoming Events — Action Required</div>
+          <div id="reminder-list"></div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card sc-gold"><div class="stat-lbl">Total Orders</div><div class="stat-val" id="s-total">—</div><div class="stat-sub">all time</div></div>
+          <div class="stat-card sc-orange"><div class="stat-lbl">This Month</div><div class="stat-val" id="s-month">—</div><div class="stat-sub">upcoming events</div></div>
+          <div class="stat-card sc-red"><div class="stat-lbl">Critical</div><div class="stat-val" id="s-critical">—</div><div class="stat-sub">need attention</div></div>
+          <div class="stat-card sc-green"><div class="stat-lbl">New (Unread)</div><div class="stat-val" id="s-new">—</div><div class="stat-sub">from customers</div></div>
+        </div>
+        <div class="sec-hdr" style="margin-top:.5rem">
+          <div><div class="sec-title" style="font-size:20px">Priority Queue</div><div class="sec-sub">Top 5 most urgent orders</div></div>
+        </div>
+        <div class="orders-list" id="priority-list"></div>
+      </div>
+
+      <!-- ALL ORDERS -->
+      <div class="page" id="page-orders">
+        <div class="sec-hdr">
+          <div><div class="sec-title">All Orders</div><div class="sec-sub">Live from Dawat Caterers website + manual entries</div></div>
+          <button class="btn btn-gold" onclick="openModal()">+ New Order</button>
+        </div>
+        <div class="search-box">
+          <span style="font-size:14px;color:var(--text3)">🔍</span>
+          <input type="text" id="search-input" placeholder="Search by name, order ID, event type, phone…" oninput="renderOrders()">
+        </div>
+        <div class="filter-row">
+          <div class="fchip active" onclick="setChip('all',this)">All</div>
+          <div class="fchip" onclick="setChip('pending',this)">Pending</div>
+          <div class="fchip" onclick="setChip('confirmed',this)">Confirmed</div>
+          <div class="fchip" onclick="setChip('delivered',this)">Delivered</div>
+          <div class="fchip" onclick="setChip('critical',this)">🔴 Critical</div>
+          <div class="fchip" onclick="setChip('high',this)">🟠 High</div>
+          <div class="fchip" onclick="setChip('wedding',this)">💍 Wedding</div>
+          <div class="fchip" onclick="setChip('corporate',this)">🏢 Corporate</div>
+          <div class="fchip" onclick="setChip('new',this)">🆕 New</div>
+        </div>
+        <div class="orders-list" id="orders-list"></div>
+      </div>
+
+      <!-- CALENDAR -->
+      <div class="page" id="page-calendar">
+        <div class="sec-hdr"><div class="sec-title">Calendar View</div></div>
+        <div class="cal-nav">
+          <button class="btn btn-ghost btn-sm" onclick="changeMonth(-1)">← Prev</button>
+          <div class="cal-month-title" id="cal-title"></div>
+          <button class="btn btn-ghost btn-sm" onclick="changeMonth(1)">Next →</button>
+        </div>
+        <div class="cal-grid7" id="cal-hdr"></div>
+        <div style="height:6px"></div>
+        <div class="cal-grid7" id="cal-body"></div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="page" id="page-settings">
+        <div class="sec-hdr"><div class="sec-title">Settings</div></div>
+        <div class="settings-card">
+          <h3>📊 Database Info</h3>
+          <p style="font-size:13px;color:var(--text3);line-height:1.7">All orders are stored in <strong style="color:var(--gold)">Firebase Firestore</strong> under your <em>dawat-caterers</em> project. Customer orders arrive automatically from the Dawat Caterers website. You can also add orders manually using the <strong>+ New Order</strong> button.<br><br>To manage or view raw data, visit <a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold)">console.firebase.google.com</a>.</p>
+        </div>
+        <div class="settings-card">
+          <h3>🤖 AI Prioritization</h3>
+          <p style="font-size:13px;color:var(--text3);line-height:1.7;margin-bottom:1rem">Use <strong style="color:var(--gold)">✦ AI Rate</strong> on any order card to rate a single order, or use <strong style="color:var(--gold)">✦ AI Prioritize All</strong> in the topbar to rate every active order at once. Priorities are saved back to Firebase instantly.</p>
+          <button class="btn btn-ai" onclick="aiPrioritizeAll()">✦ AI Prioritize All Orders Now</button>
+        </div>
+        <div class="settings-card" style="border-color:var(--red-border)">
+          <h3 style="color:var(--red)">⚠ Danger Zone</h3>
+          <p style="font-size:13px;color:var(--text3);margin-bottom:1rem">Deleting orders is permanent and cannot be undone. Delete individual orders using the 🗑 button on each order card.</p>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+  </div><!-- /body-layout -->
+</div><!-- /app -->
+
+<!-- ADD / EDIT ORDER MODAL -->
+<div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modal-title">New Order</div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="mfgrid">
+        <div class="mfg"><label>Customer Name *</label><input id="mf-name" placeholder="e.g. Priya Sharma"></div>
+        <div class="mfg"><label>Order ID</label><input id="mf-id" readonly></div>
+        <div class="mfg"><label>Event Type *</label>
+          <select id="mf-event">
+            <option value="">— Select —</option>
+            <option>Wedding</option><option>Birthday Party</option><option>Corporate Event</option>
+            <option>Anniversary</option><option>Religious Ceremony</option><option>Engagement</option>
+            <option>Baby Shower</option><option>Other</option>
+          </select>
+        </div>
+        <div class="mfg"><label>Status</label>
+          <select id="mf-status">
+            <option>Pending</option><option>Confirmed</option><option>Delivered</option><option>Cancelled</option>
+          </select>
+        </div>
+        <div class="mfg"><label>Delivery Date *</label><input type="date" id="mf-date"></div>
+        <div class="mfg"><label>Delivery Time *</label><input type="time" id="mf-time"></div>
+        <div class="mfg"><label>No. of Guests</label><input type="number" id="mf-guests" placeholder="e.g. 200"></div>
+        <div class="mfg"><label>Menu Package</label>
+          <select id="mf-menu">
+            <option value="">— Select —</option>
+            <option value="Main Course">Main Course</option>
+            <option value="Gravies Package">Gravies Package</option>
+            <option value="Starters Package">Starters Package</option>
+            <option value="Desserts Package">Desserts Package</option>
+            <option value="Full Dawat Package">Full Dawat Package</option>
+          </select>
+        </div>
+        <div class="mfg full"><label>Phone</label><input id="mf-phone" placeholder="+91 98765 43210"></div>
+        <div class="mfg full"><label>Venue / Address</label><input id="mf-venue" placeholder="Event venue address"></div>
+        <div class="mfg full"><label>Notes</label><textarea id="mf-notes" placeholder="Special requirements, dietary notes, extras…"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveOrder()">💾 Save Order</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:"AIzaSyDeLIJ-_VNF4oSHBVg8Y_vItc6VSbGSXQQ",
+  authDomain:"dawat-caterers.firebaseapp.com",
+  projectId:"dawat-caterers",
+  storageBucket:"dawat-caterers.firebasestorage.app",
+  messagingSenderId:"719274841723",
+  appId:"1:719274841723:web:265b217ab0274314c8f4de"
+});
+const db = getFirestore(app);
+
+window.__db  = db;
+window.__col = collection;
+window.__add = addDoc;
+window.__upd = updateDoc;
+window.__del = deleteDoc;
+window.__doc = doc;
+window.__ts  = serverTimestamp;
+
+// Start real-time listener
+window.__orders = [];
+const q = query(collection(db,'orders'), orderBy('createdAt','desc'));
+window.__unsubscribe = onSnapshot(q, (snapshot) => {
+  snapshot.docChanges().forEach(change => {
+    if(change.type === 'added'){
+      const data = change.doc.data();
+      const existing = window.__orders.find(o => o.__fireId === change.doc.id);
+      if(!existing){
+        const ts = data.createdAt?.toDate?.();
+        const isNew = ts && (Date.now() - ts.getTime()) < 5 * 60 * 1000;
+        window.__orders.unshift({ ...data, __fireId: change.doc.id, __isNew: isNew });
+        if(isNew && window.__appReady){
+          showToast('🆕 New order: ' + (data.customerName || data.name || 'Customer'), false);
+        }
+      }
+    }
+    if(change.type === 'modified'){
+      const idx = window.__orders.findIndex(o => o.__fireId === change.doc.id);
+      if(idx !== -1) window.__orders[idx] = { ...change.doc.data(), __fireId: change.doc.id, __isNew: window.__orders[idx].__isNew };
+    }
+    if(change.type === 'removed'){
+      window.__orders = window.__orders.filter(o => o.__fireId !== change.doc.id);
+    }
+  });
+  if(window.__appReady) window.__renderAll();
+}, (err) => {
+  console.error('Firestore error:', err);
+  showToast('⚠ Database connection issue.');
+});
+
+// Boot the app after Firebase is ready
+setTimeout(() => {
+  window.__appReady = true;
+  document.getElementById('loading-overlay').classList.add('hide');
+  window.__renderAll();
+}, 900);
+</script>
+
+<script>
+// ════════════════════════════════════
+// GLOBALS
+// ════════════════════════════════════
+window.__orders = window.__orders || [];
+window.__appReady = false;
+let currentFilter = 'all';
+let editingId = null;
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+const TODAY = new Date();
+
+document.getElementById('topbar-date').textContent = TODAY.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+document.getElementById('dash-date').textContent = TODAY.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+// ════════════════════════════════════
+// UTILS
+// ════════════════════════════════════
+function genId(){return'CP-'+Date.now().toString(36).toUpperCase().slice(-6)}
+function daysUntil(d){if(!d)return 999;const dt=new Date(d+'T00:00:00'),t=new Date();t.setHours(0,0,0,0);return Math.ceil((dt-t)/86400000)}
+function fmtDate(d){if(!d)return'—';return new Date(d+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}
+
+function cdHTML(d){
+  const n=daysUntil(d);
+  if(n<0) return`<span class="cd-past">Done</span>`;
+  if(n===0)return`<span class="cd-urgent">TODAY!</span>`;
+  if(n<=2) return`<span class="cd-urgent">In ${n}d</span>`;
+  if(n<=7) return`<span class="cd-soon">In ${n}d</span>`;
+  return`<span class="cd-ok">In ${n}d</span>`;
+}
+function pClass(p){return{Critical:'p-critical',High:'p-high',Medium:'p-medium',Low:'p-low'}[p]||''}
+function pPill(p){if(!p)return`<span class="ppill pp-none">Unrated</span>`;return`<span class="ppill pp-${p.toLowerCase()}">${p}</span>`}
+function evBadge(e){
+  const m={'Wedding':'ev-wedding','Birthday Party':'ev-birthday','Corporate Event':'ev-corporate','Engagement':'ev-corporate','Anniversary':'ev-other','Religious Ceremony':'ev-other','Baby Shower':'ev-other','Conference':'ev-conference'};
+  return`<span class="oev-badge ${m[e]||'ev-other'}">${e||'—'}</span>`
+}
+function sdot(s){const m={Pending:'sd-pending',Confirmed:'sd-confirmed',Delivered:'sd-delivered',Cancelled:'sd-cancelled'};return`<span class="sdot ${m[s]||'sd-pending'}"></span>${s}`}
+
+function showToast(msg,err=true){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.background=err?'#2A1212':'#0E2114';
+  t.style.borderColor=err?'var(--red-border)':'var(--green-border)';
+  t.style.color=err?'var(--red)':'var(--green)';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════
+function showPage(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(el)el.classList.add('active');
+  if(name==='calendar')renderCalendar();
+  if(name==='orders')renderOrders();
+  if(name==='dashboard')renderDashboard();
+}
+function qFilter(f){
+  currentFilter=f;
+  showPage('orders',document.querySelectorAll('.nav-item')[1]);
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('active'));
+  const chip=[...document.querySelectorAll('.fchip')].find(c=>c.getAttribute('onclick')?.includes(`'${f}'`));
+  if(chip)chip.classList.add('active');
+}
+function setChip(f,el){
+  currentFilter=f;
+  document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderOrders();
+}
+
+// ════════════════════════════════════
+// MODAL
+// ════════════════════════════════════
+function openModal(id=null){
+  editingId=id;
+  document.getElementById('modal-title').textContent=id?'Edit Order':'New Order';
+  if(id){
+    const o=window.__orders.find(x=>x.__fireId===id);
+    if(!o)return;
+    document.getElementById('mf-name').value=o.customerName||o.name||'';
+    document.getElementById('mf-id').value=o.orderId||o.id||'';
+    document.getElementById('mf-event').value=o.eventType||o.event_type||'';
+    document.getElementById('mf-status').value=o.status||'Pending';
+    document.getElementById('mf-date').value=o.date||o.event_date||'';
+    document.getElementById('mf-time').value=o.time||o.event_time||'';
+    document.getElementById('mf-guests').value=o.guests||'';
+    document.getElementById('mf-menu').value=o.menuPackage||'';
+    document.getElementById('mf-phone').value=o.phone||'';
+    document.getElementById('mf-venue').value=o.venue||'';
+    document.getElementById('mf-notes').value=o.notes||'';
+  } else {
+    ['mf-name','mf-event','mf-date','mf-time','mf-guests','mf-menu','mf-phone','mf-venue','mf-notes'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('mf-status').value='Pending';
+    document.getElementById('mf-id').value=genId();
+  }
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal(){document.getElementById('modal').classList.remove('show');editingId=null}
+
+async function saveOrder(){
+  const name=document.getElementById('mf-name').value.trim();
+  const event=document.getElementById('mf-event').value;
+  const date=document.getElementById('mf-date').value;
+  const time=document.getElementById('mf-time').value;
+  if(!name||!event||!date||!time){showToast('⚠ Please fill in all required fields.');return}
+  const order={
+    customerName:name,
+    eventType:event,date,time,
+    status:document.getElementById('mf-status').value,
+    guests:parseInt(document.getElementById('mf-guests').value)||0,
+    menuPackage:document.getElementById('mf-menu').value,
+    phone:document.getElementById('mf-phone').value.trim(),
+    venue:document.getElementById('mf-venue').value.trim(),
+    notes:document.getElementById('mf-notes').value.trim(),
+    source:'manual',priority:null,aiReason:null
+  };
+  try{
+    if(editingId){
+      const {__fireId,...rest}=order;
+      await window.__upd(window.__doc(window.__db,'orders',editingId),rest);
+    } else {
+      order.orderId=document.getElementById('mf-id').value;
+      order.createdAt=window.__ts();
+      await window.__add(window.__col(window.__db,'orders'),order);
+    }
+    closeModal();
+    showToast(editingId?'✅ Order updated!':'✅ Order added!',false);
+  }catch(e){console.error(e);showToast('⚠ Failed to save. Check your connection.')}
+}
+
+async function deleteOrder(fireId){
+  if(!confirm('Delete this order permanently from Firebase? This cannot be undone.'))return;
+  try{
+    await window.__del(window.__doc(window.__db,'orders',fireId));
+    showToast('🗑 Order deleted.',false);
+  }catch(e){showToast('⚠ Failed to delete.')}
+}
+
+async function updateStatus(fireId,newStatus){
+  if(!newStatus)return;
+  try{
+    await window.__upd(window.__doc(window.__db,'orders',fireId),{status:newStatus});
+    showToast('✅ Status updated to '+newStatus,false);
+  }catch(e){showToast('⚠ Failed to update status.')}
+}
+
+function markRead(fireId){
+  const o=window.__orders.find(x=>x.__fireId===fireId);
+  if(o){o.__isNew=false;window.__renderAll();}
+}
+
+// ════════════════════════════════════
+// RENDER
+// ════════════════════════════════════
+function sortedOrders(list){
+  const p={Critical:0,High:1,Medium:2,Low:3};
+  return[...list].sort((a,b)=>{
+    const pa=p[a.priority]??4,pb=p[b.priority]??4;
+    if(pa!==pb)return pa-pb;
+    return new Date(a.date||a.event_date||'9999')-new Date(b.date||b.event_date||'9999');
+  });
+}
+
+function filteredOrders(){
+  let list=[...(window.__orders||[])];
+  const q=(document.getElementById('search-input')?.value||'').toLowerCase();
+  if(q)list=list.filter(o=>{
+    return(o.customerName||o.name||'').toLowerCase().includes(q)||
+           (o.orderId||o.id||'').toLowerCase().includes(q)||
+           (o.eventType||o.event_type||'').toLowerCase().includes(q)||
+           (o.phone||'').toLowerCase().includes(q);
+  });
+  switch(currentFilter){
+    case'critical': list=list.filter(o=>o.priority==='Critical');break;
+    case'high':     list=list.filter(o=>o.priority==='High');break;
+    case'pending':  list=list.filter(o=>o.status==='Pending');break;
+    case'confirmed':list=list.filter(o=>o.status==='Confirmed');break;
+    case'delivered':list=list.filter(o=>o.status==='Delivered');break;
+    case'today':    list=list.filter(o=>daysUntil(o.date||o.event_date)===0);break;
+    case'wedding':  list=list.filter(o=>(o.eventType||o.event_type||'').toLowerCase().includes('wedding'));break;
+    case'corporate':list=list.filter(o=>(o.eventType||o.event_type||'').toLowerCase().includes('corporate'));break;
+    case'new':      list=list.filter(o=>o.__isNew);break;
+  }
+  return sortedOrders(list);
+}
+
+function orderCardHTML(o,expanded=false){
+  const fid=o.__fireId||'';
+  const name=o.customerName||o.name||'—';
+  const oid=o.orderId||o.id||'—';
+  const ev=o.eventType||o.event_type||'Other';
+  const date=o.date||o.event_date||'';
+  const time=o.time||o.event_time||'';
+  const status=o.status||'Pending';
+  const guests=o.guests||'—';
+  const menu=o.menuPackage||'—';
+  const phone=o.phone||'—';
+  const email=o.email||'—';
+  const venue=o.venue||'—';
+  const extras=(o.extras||[]).join(', ')||'None';
+  const notes=o.notes||'';
+
+  return`<div class="ocard ${pClass(o.priority)}" id="ocard-${fid}">
+    <div class="ocard-head" onclick="toggleOCard('${fid}');markRead('${fid}')">
+      <div class="oid">${oid}</div>
+      <div class="oname">${name}${o.__isNew?' <span class="new-badge">NEW</span>':''}</div>
+      ${evBadge(ev)}
+      <div class="odate">📅 ${fmtDate(date)} &nbsp;⏰ ${time||'—'} &nbsp;${date?cdHTML(date):''}</div>
+      ${pPill(o.priority)}
+    </div>
+    <div class="ocard-body ${expanded?'open':''}" id="obody-${fid}">
+      <div class="detail-grid">
+        <div class="dg"><label>Status</label><span>${sdot(status)}</span></div>
+        <div class="dg"><label>Guests</label><span>${guests}</span></div>
+        <div class="dg"><label>Phone</label><span>${phone}</span></div>
+        <div class="dg"><label>Email</label><span style="word-break:break-all">${email}</span></div>
+        <div class="dg"><label>Menu Package</label><span>${menu}</span></div>
+        <div class="dg"><label>Source</label><span>${o.source==='manual'?'📝 Manual':'🌐 Website'}</span></div>
+        ${venue!=='—'?`<div class="dg dg-full"><label>Venue</label><span>${venue}</span></div>`:''}
+        ${extras!=='None'?`<div class="dg dg-full"><label>Extras & Add-ons</label><span>${extras}</span></div>`:''}
+        ${notes?`<div class="dg dg-full"><label>Notes</label><span>${notes}</span></div>`:''}
+      </div>
+      ${o.aiReason?`<div class="ai-box"><span>✦</span><div><strong>AI Priority Reason</strong>${o.aiReason}</div></div>`:''}
+      <div class="card-actions">
+        <button class="btn btn-ghost btn-sm" onclick="openModal('${fid}')">✏️ Edit</button>
+        <select class="btn btn-ghost btn-sm" style="padding:5px 8px;cursor:pointer" onchange="updateStatus('${fid}',this.value)">
+          <option value="">Change Status…</option>
+          <option value="Pending">Pending</option>
+          <option value="Confirmed">Confirmed</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+        <button class="btn btn-ai btn-sm" onclick="aiRateSingle('${fid}')">✦ AI Rate</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteOrder('${fid}')">🗑 Delete</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function toggleOCard(fid){document.getElementById('obody-'+fid)?.classList.toggle('open')}
+
+function renderOrders(){
+  const list=filteredOrders();
+  const el=document.getElementById('orders-list');
+  if(!list.length){
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">📋</div><p>${window.__orders?.length?'No orders match this filter.':'Waiting for orders from the customer website…'}</p><button class="btn btn-gold" onclick="openModal()">+ Add Manual Order</button></div>`;
+    return;
+  }
+  el.innerHTML=list.map(o=>orderCardHTML(o)).join('');
+}
+
+function renderDashboard(){
+  const now=new Date();
+  const orders=window.__orders||[];
+  const active=orders.filter(o=>o.status!=='Delivered'&&o.status!=='Cancelled');
+  document.getElementById('s-total').textContent=orders.length;
+  const monthEnd=new Date(now.getFullYear(),now.getMonth()+1,0);
+  document.getElementById('s-month').textContent=active.filter(o=>{const d=new Date((o.date||o.event_date||'')+'T00:00:00');return d>=now&&d<=monthEnd}).length;
+  document.getElementById('s-critical').textContent=active.filter(o=>o.priority==='Critical').length;
+  document.getElementById('s-new').textContent=orders.filter(o=>o.__isNew).length;
+
+  const urgent=active.filter(o=>{const d=daysUntil(o.date||o.event_date);return d>=0&&d<=2});
+  const bar=document.getElementById('reminder-bar');
+  if(urgent.length){
+    bar.classList.add('show');
+    document.getElementById('reminder-list').innerHTML=urgent.map(o=>{
+      const d=daysUntil(o.date||o.event_date);
+      return`<div class="rb-item">⚡ <strong>${o.customerName||o.name}</strong> — ${o.eventType||o.event_type||'Event'} on <strong>${fmtDate(o.date||o.event_date)}</strong> at ${o.time||o.event_time||'—'} &nbsp;·&nbsp; ${d===0?'<span style="color:var(--red);font-weight:700">TODAY</span>':`<span style="color:var(--orange)">${d}d away</span>`} &nbsp;·&nbsp; Guests: ${o.guests||'—'}</div>`;
+    }).join('');
+  } else bar.classList.remove('show');
+
+  const top5=sortedOrders(active).slice(0,5);
+  const pl=document.getElementById('priority-list');
+  pl.innerHTML=top5.length?top5.map(o=>orderCardHTML(o)).join(''):`<div class="empty-state"><div class="empty-icon">🍽</div><p>No active orders yet.<br>Orders from customers will appear here automatically.</p><button class="btn btn-gold" onclick="openModal()">+ Add Manual Order</button></div>`;
+
+  updateBadge();
+}
+
+function updateBadge(){
+  document.getElementById('nav-badge').textContent=(window.__orders||[]).filter(o=>o.status!=='Delivered'&&o.status!=='Cancelled').length;
+}
+
+window.__renderAll=function(){
+  renderDashboard();
+  renderOrders();
+  if(document.querySelector('.page.active')?.id==='page-calendar')renderCalendar();
+};
+
+// ════════════════════════════════════
+// CALENDAR
+// ════════════════════════════════════
+function renderCalendar(){
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  document.getElementById('cal-hdr').innerHTML=days.map(d=>`<div class="cal-day-lbl">${d}</div>`).join('');
+  document.getElementById('cal-title').textContent=new Date(calYear,calMonth,1).toLocaleDateString('en-IN',{month:'long',year:'numeric'});
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const daysInM=new Date(calYear,calMonth+1,0).getDate();
+  let html='';
+  for(let i=0;i<firstDay;i++)html+=`<div class="cal-cell cal-empty"></div>`;
+  for(let d=1;d<=daysInM;d++){
+    const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayOrders=(window.__orders||[]).filter(o=>(o.date||o.event_date)===ds);
+    const isToday=d===TODAY.getDate()&&calMonth===TODAY.getMonth()&&calYear===TODAY.getFullYear();
+    html+=`<div class="cal-cell ${isToday?'today':''}"><div class="cal-num">${d}</div>${dayOrders.map(o=>{const cls={'Wedding':'ev-wedding','Birthday Party':'ev-birthday','Corporate Event':'ev-corporate'}[o.eventType||o.event_type]||'ev-other';return`<div class="cal-ev ${cls}" title="${o.customerName||o.name} — ${o.time||''}">${(o.customerName||o.name||'').split(' ')[0]}</div>`;}).join('')}</div>`;
+  }
+  document.getElementById('cal-body').innerHTML=html;
+}
+function changeMonth(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++}if(calMonth<0){calMonth=11;calYear--}renderCalendar()}
+
+// ════════════════════════════════════
+// AI PRIORITIZE
+// ════════════════════════════════════
+async function aiRateSingle(fid){
+  const o=(window.__orders||[]).find(x=>x.__fireId===fid);
+  if(!o)return;
+  const body=document.getElementById('obody-'+fid);
+  body.classList.add('open');
+  body.querySelectorAll('.ai-box,.ai-loading').forEach(el=>el.remove());
+  const loader=document.createElement('div');
+  loader.className='ai-loading';
+  loader.innerHTML=`<div class="spinner"></div> AI is analysing this order…`;
+  body.appendChild(loader);
+  const du=daysUntil(o.date||o.event_date);
+  const prompt=`You are a catering business AI. Analyse this order and assign a priority.\n\nOrder:\n- Name: ${o.customerName||o.name}\n- Event: ${o.eventType||o.event_type}\n- Date: ${o.date||o.event_date} (${du} days from today)\n- Time: ${o.time||o.event_time}\n- Guests: ${o.guests}\n- Menu: ${o.menuPackage||'Not specified'}\n- Status: ${o.status}\n\nPriority Rules:\n- Critical: ≤2 days OR ≥500 guests\n- High: 3–7 days OR ≥200 guests\n- Medium: 8–14 days\n- Low: 15+ days\n\nRespond ONLY with JSON (no markdown):\n{"priority":"Critical|High|Medium|Low","reason":"One clear sentence."}`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:200,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    const json=JSON.parse(data.content[0].text.trim().replace(/```json|```/g,'').trim());
+    await window.__upd(window.__doc(window.__db,'orders',fid),{priority:json.priority,aiReason:json.reason});
+    loader.remove();
+    showToast(`✦ Priority: ${json.priority}`,false);
+  }catch(e){loader.remove();showToast('⚠ AI rating failed. Try again.')}
+}
+
+async function aiPrioritizeAll(){
+  const active=(window.__orders||[]).filter(o=>o.status!=='Delivered'&&o.status!=='Cancelled');
+  if(!active.length){showToast('No active orders to prioritize.');return}
+  showToast('✦ AI is analysing all orders…',false);
+  const summary=active.map(o=>({fireId:o.__fireId,name:o.customerName||o.name,event:o.eventType||o.event_type,date:o.date||o.event_date,guests:o.guests,daysUntil:daysUntil(o.date||o.event_date)}));
+  const prompt=`You are a catering AI. Prioritise ALL these orders.\n\n${JSON.stringify(summary)}\n\nRules: Critical=≤2d or ≥500 guests; High=3-7d or ≥200 guests; Medium=8-14d; Low=15+d\n\nRespond ONLY with JSON array (no markdown):\n[{"fireId":"...","priority":"Critical|High|Medium|Low","reason":"One sentence."}]`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    const arr=JSON.parse(data.content[0].text.trim().replace(/```json|```/g,'').trim());
+    for(const r of arr){
+      if(r.fireId) await window.__upd(window.__doc(window.__db,'orders',r.fireId),{priority:r.priority,aiReason:r.reason});
+    }
+    showToast(`✦ All ${arr.length} orders prioritized!`,false);
+  }catch(e){showToast('⚠ AI prioritization failed.')}
+}
+</script>
+</body>
+</html>
